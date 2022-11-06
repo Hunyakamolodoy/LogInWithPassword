@@ -11,7 +11,7 @@ class LoginViewController: UIViewController {
     @IBOutlet var userTF: UITextField!
     @IBOutlet var passwordTF: UITextField!
     
-    let user = "Useruseruser"
+    let user = "user"
     let password = "qwerty"
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -46,8 +46,8 @@ class LoginViewController: UIViewController {
             //check = true
         } else {
             showAlert(
-                withTitile: "Something went wrong",
-                andMessage: "Please check your username and password"
+                withTitile: "Invalid login or password",
+                andMessage: "Please, enter correct login and password"
             )
         }
     }
