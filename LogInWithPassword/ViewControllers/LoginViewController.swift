@@ -15,16 +15,13 @@ class LoginViewController: UIViewController {
     let password = "qwerty"
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let newTF = segue.destination as? WelcomeViewController else {return}
-        newTF.usernameWelcome = userTF.text
+        guard let welcomeVC = segue.destination as? WelcomeViewController else {return}
+        welcomeVC.usernameWelcome = userTF.text
     }
     
     @IBAction func userButtonAction() {
@@ -45,6 +42,8 @@ class LoginViewController: UIViewController {
         if userTF.text == user && passwordTF.text == password {
             //check = true
         } else {
+            userTF.text = ""
+            passwordTF.text = ""
             showAlert(
                 withTitile: "Invalid login or password",
                 andMessage: "Please, enter correct login and password"
