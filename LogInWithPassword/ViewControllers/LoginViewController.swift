@@ -7,12 +7,13 @@
 
 import UIKit
 
+
 class LoginViewController: UIViewController {
     @IBOutlet var userTF: UITextField!
     @IBOutlet var passwordTF: UITextField!
     
-    let user = "user"
-    let password = "qwerty"
+    private let user = "b"
+    private let password = "1234"
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -20,39 +21,47 @@ class LoginViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let welcomeVC = segue.destination as? WelcomeViewController else {return}
-        welcomeVC.usernameWelcome = userTF.text
+        guard let tabBarVC = segue.destination as? UITabBarController else {return}
+        guard let viewControllers = tabBarVC.viewControllers else {return}
+        
+        for viewController in viewControllers {
+            if let welcomeVC = viewController as? WelcomeViewController {
+                welcomeVC.user = user
+            } else if let navigationVC = viewController as? UINavigationController {
+                guard let describeVC = navigationVC.topViewController as? DescribeViewController else {return}
+                describeVC.view.backgroundColor = .tertiarySystemGroupedBackground
+            }
+        }
     }
     
     @IBAction func userButtonAction() {
         showAlert(
-            withTitile: "Oops!",
-            andMessage: "Your name is \(user)"
+            withTitile: "Упсс...",
+            andMessage: "Ваш логин \(user)"
         )
     }
     
     @IBAction func passwordButtonAction() {
         showAlert(
-            withTitile: "Oops!",
-            andMessage: "Your password is \(password)"
+            withTitile: "Упсс...",
+            andMessage: "Ваш пароль \(password)"
         )
     }
     
     @IBAction func loginButtonAction() {
-        if userTF.text == user && passwordTF.text == password {
-            //check = true
-        } else {
+        guard userTF.text == user, passwordTF.text == password else {
             userTF.text = ""
             passwordTF.text = ""
             showAlert(
-                withTitile: "Invalid login or password",
-                andMessage: "Please, enter correct login and password"
+                withTitile: "Неверный логин или пароль",
+                andMessage: "Пожалуйста, проверьте корректность введенных данных"
             )
+            return
         }
+        performSegue(withIdentifier: "openWelcomeVC", sender: nil)
     }
     
     @IBAction func unwind(for segue: UIStoryboardSegue) {
-        guard segue.source is WelcomeViewController else {return}
         userTF.text = ""
         passwordTF.text = ""
     }
@@ -64,7 +73,7 @@ class LoginViewController: UIViewController {
 extension LoginViewController {
     private func showAlert(withTitile title: String, andMessage message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
+        let okAction = UIAlertAction(title: "ОК", style: .default)
         alert.addAction(okAction)
         present(alert, animated: true)
     }
